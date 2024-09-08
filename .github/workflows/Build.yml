@@ -1,0 +1,54 @@
+name: 打包
+on: [push]
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  run_python_script:
+    name: 打包
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Check out git repository
+        uses: actions/checkout@v4
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      
+      - name: Install dependencies
+        run: |
+          npm i -g pnpm
+
+      - name: Run pnpm install
+        run: |
+          pnpm i
+
+      # 针对 Windows 的构建
+      - name: Build Electron App for Windows
+        if: matrix.os == 'windows-latest'
+        run: pnpm run build:win
+  
+
+      # 检测 macOS 的架构 (M1 和 Intel)
+      - name: Detect architecture
+        if: matrix.os == 'macos-latest'
+        run: |
+          pnpm run build:mac:arm64
+          echo "Building for Intel (x86)"
+          pnpm run build:mac:x64
+        
+     
+      # 上传构建结果
+      - name: Upload package
+        uses: actions/upload-artifact@v2
+        with:
+          name: xanadu  # 替换为你的软件包名称
+          path: |
+           "build/*.exe"
+           "build/*.dmg
+          # 替换为你的软件包所在的目录名
