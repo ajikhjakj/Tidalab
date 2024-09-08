@@ -14,7 +14,8 @@
     "crypto-js": "^3.3.0"
   },
   "scripts": {
-    "build:mac": "electron-builder --mac",
+    "build:mac:arm64": "electron-builder --mac --arm64",
+    "build:mac:x64": "electron-builder --mac --x64",
     "build:win": "electron-builder --win"
   },
   "build": {
