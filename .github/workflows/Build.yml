@@ -50,5 +50,5 @@ jobs:
           name: xanadu  # 替换为你的软件包名称
           path: |
            "build/*.exe"
-           "build/*.dmg
+           "build/*.dmg"
           # 替换为你的软件包所在的目录名
